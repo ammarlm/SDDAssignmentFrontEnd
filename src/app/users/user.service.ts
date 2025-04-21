@@ -16,15 +16,15 @@ export class UserService {
         return this.http.get<User>(environment.baseUrl + 'api/user/' + id);
     }
 
-    addUser(user: any) {
-        return this.http.post<User>(environment.baseUrl + 'api/user/', user);
+    addUser(user: User) {
+        return this.http.post(environment.baseUrl + 'api/user', user);
     }
 
-    updateUser(user: any) {
-        return this.http.put<User>(environment.baseUrl + 'api/user/' + user.id, user);
+    updateUser(id: string, user: User) {
+        return this.http.put(environment.baseUrl + 'api/user/' + user.id, user);
     }
 
-    deleteUser(id: number) {
+    deleteUser(id: string) {
         return this.http.delete(environment.baseUrl + 'api/user/' + id);
     }
 }

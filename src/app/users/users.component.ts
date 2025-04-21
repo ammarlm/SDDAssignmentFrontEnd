@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from './user.service';
+import { ConfirmDialogComponent } from '../shared/component/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-users',
@@ -24,6 +25,9 @@ export class UsersComponent implements OnInit, AfterViewInit {
   pageSize = 10;
   totalCount = 0;
   search = '';
+  user: User | null = null;
+
+  private defaultWidth = '600px';
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -32,12 +36,23 @@ export class UsersComponent implements OnInit, AfterViewInit {
     private translate: TranslateService,
     private dialog: MatDialog,
     private authService: AuthService
-  ) { }
+  ) {
+    this.authService.loginUser.subscribe((user) => {
+      console.log(user);
+      
+      if (user == null) return;
+      this.user = {
+        username: user.username,
+        role: user.role
+      };
+    })
+  }
 
   ngOnInit(): void {
     this.loadUsers();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
   }
 
   get isAdmin(): boolean {
@@ -46,16 +61,12 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.sort.sortChange.subscribe((sort) => {
-      console.log('Sort changed:', sort);
       this.loadUsers();
     });
   }
 
   loadUsers(): void {
     const pageIndex = this.paginator?.pageIndex ?? 0;
-    const sortBy = this.sort?.active ?? 'username';
-    //pageIndex + 1, this.pageSize, this.search, sortBy
-    console.log('pageIndex', pageIndex, this.pageSize, this.search, this.sort)
     this.userService.getUsers(pageIndex, this.pageSize, this.sort?.active, this.sort?.direction == '' ? 'asc' : this.sort?.direction, this.search)
       .subscribe({
         next: (response) => {
@@ -75,44 +86,48 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(UserFromComponent, {
-      width: '400px',
+      width: this.defaultWidth,
       data: { user: null }
     });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.userService.createUser(result).subscribe(() => this.loadUsers());
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadUsers();
+      }
+    });
   }
 
   openEditDialog(user: User): void {
     const dialogRef = this.dialog.open(UserFromComponent, {
-      width: '400px',
+      width: this.defaultWidth,
       data: { user }
     });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.userService.updateUser(user.id, result).subscribe(() => this.loadUsers());
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadUsers()
+      }
+    });
   }
 
   openDeleteDialog(id: string): void {
-    // const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    //   width: '300px',
-    //   data: { message: this.translate.instant('USERS.CONFIRM_DELETE') }
-    // });
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '300px',
+      data: { message: this.translate.instant('USERS.CONFIRM_DELETE') }
+    });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.userService.deleteUser(id).subscribe(() => this.loadUsers());
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.userService.deleteUser(id).subscribe(() => this.loadUsers());
+      }
+    });
   }
 
   switchLanguage(lang: string): void {
     this.translate.use(lang);
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }

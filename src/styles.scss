@@ -1,5 +1,10 @@
 @import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
 
 * {
-    // box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+.padding-top-10 {
+    padding-top: 10px !important;
 }

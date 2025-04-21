@@ -4,7 +4,17 @@
         <div class="language-switcher">
             <button mat-button (click)="switchLanguage('en')">English</button>
             <button mat-button (click)="switchLanguage('ar')">العربية</button>
+            <button mat-icon-button (click)="logout()">
+                <mat-icon>logout</mat-icon>
+            </button>
         </div>
+        <!-- <div class="user-info">
+            <span>{{ user?.username }}</span>
+            <button mat-icon-button (click)="logout()">
+                <mat-icon>logout</mat-icon>
+            </button>
+            <button mat-button>{{ 'USERS.LOGOUT' | translate }}</button>
+        </div> -->
     </div>
 
     <div class="controls">
@@ -12,6 +22,11 @@
             <mat-label>{{ 'USERS.SEARCH' | translate }}</mat-label>
             <input matInput [(ngModel)]="search" (input)="applyFilter()" />
         </mat-form-field>
+        @if(isAdmin){
+        <button mat-raised-button color="primary" (click)="openCreateDialog()">
+            {{ 'USERS.CREATE' | translate }}
+        </button>
+        }
     </div>
 
     <table mat-table [dataSource]="dataSource" matSort>
@@ -25,7 +40,16 @@
         </ng-container>
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>{{ 'USERS.ACTIONS' | translate }}</th>
-            
+            @if(isAdmin){
+            <td mat-cell *matCellDef="let user">
+                <button mat-icon-button color="primary" aria-label="Edit" (click)="openEditDialog(user)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" aria-label="Delete" (click)="openDeleteDialog(user.id)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+            }
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
