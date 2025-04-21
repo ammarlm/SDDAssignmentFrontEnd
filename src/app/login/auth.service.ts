@@ -32,6 +32,24 @@ export class AuthService {
       }));
   }
 
+  autoLogin() {
+    let userData = localStorage.getItem('userData');
+    if (!userData) {
+      return;
+    }
+    let userJson: {
+      email: string,
+      _token: string,
+      role: string,
+      _tokenExpiredDate: Date
+    } = JSON.parse(userData);
+    let user = new LoginMoldel(userJson.email, userJson.role, userJson._token, userJson._tokenExpiredDate);
+    if (user.token) {
+      this.loginUser.next(user);
+      this.autoLogout(new Date(userJson._tokenExpiredDate).getTime() - new Date().getTime());
+    }
+  }
+
   logout() {
     this.loginUser.next(null);
     this.router.navigate(['/auth']);
