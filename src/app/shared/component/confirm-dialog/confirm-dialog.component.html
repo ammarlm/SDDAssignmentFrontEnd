@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>{{ 'COMMON.CONFIRM' | translate }}</h2>
+<mat-dialog-content>{{ data.message }}</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+  <button mat-raised-button color="warn" (click)="onConfirm()">{{ 'COMMON.CONFIRM' | translate }}</button>
+</mat-dialog-actions>
