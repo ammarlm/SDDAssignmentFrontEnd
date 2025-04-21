@@ -1,7 +1,8 @@
 export class LoginMoldel {
   constructor(public username: string,
-              private _token: string,
-              private _tokenExpiredDate: Date) {
+    public role: string,
+    private _token: string,
+    private _tokenExpiredDate: Date) {
   }
 
   get token() {

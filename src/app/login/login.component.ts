@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from './auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    TranslateModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -37,6 +39,7 @@ export class LoginComponent {
   }
 
   submit() {
+    console.log(this.form);
     if (this.form.invalid) return;
     this.isLoading = true;
     let userData = {
@@ -47,14 +50,16 @@ export class LoginComponent {
     this.authService.login(userData.username, userData.password).subscribe({
       next: (response) => {
         console.log(response)
-        this.isLoading = false;
         this.router.navigate(['/']);
+        this.form.reset();
       },
       error: (error) => {
-        this.error = error.error.msg;
+        console.error(error);
+        this.error = error.error?.message;
+      },
+      complete: () => {
         this.isLoading = false;
       }
     })
-    this.form.reset();
   }
 }

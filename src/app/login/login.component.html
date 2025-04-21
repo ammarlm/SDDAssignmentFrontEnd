@@ -1,16 +1,29 @@
 <mat-card>
-    <mat-card-title>Login</mat-card-title>
-    <mat-card-content>
+    <mat-card-title class="padding-top-10">{{ 'COMMON.LOGIN' | translate }}</mat-card-title>
+    <mat-card-content class="padding-top-10">
         <form [formGroup]="form" (ngSubmit)="submit()">
             <p>
-                <mat-form-field>
-                    <input type="text" matInput placeholder="Username" formControlName="username">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>{{ 'USERS.USERNAME' | translate }}</mat-label>
+                    <input matInput formControlName="username" required />
+                    <mat-error *ngIf="form.get('username')?.hasError('required')">
+                        {{ 'ERRORS.REQUIRED' | translate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('username')?.hasError('maxlength')">
+                        {{ 'ERRORS.USERNAME_MAX_LENGTH' | translate }}
+                    </mat-error>
                 </mat-form-field>
             </p>
-
             <p>
-                <mat-form-field>
-                    <input type="password" matInput placeholder="Password" formControlName="password">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>{{ 'USERS.PASSWORD' | translate }}</mat-label>
+                    <input matInput type="password" formControlName="password" />
+                    <mat-error *ngIf="form.get('password')?.hasError('required')">
+                        {{ 'ERRORS.REQUIRED' | translate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('password')?.hasError('maxlength')">
+                        {{ 'ERRORS.PASSWORD_MAX_LENGTH' | translate }}
+                    </mat-error>
                 </mat-form-field>
             </p>
 
@@ -19,7 +32,8 @@
             </p>
 
             <div class="button">
-                <button type="submit" mat-button>Login</button>
+                <button mat-raised-button color="primary" (click)="submit()" [disabled]="form.invalid" mat-button>{{
+                    'COMMON.LOGIN' | translate }}</button>
             </div>
 
         </form>
