@@ -1,0 +1,34 @@
+.container {
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.language-switcher {
+    button {
+        margin-left: 10px;
+    }
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+mat-form-field {
+    width: 300px;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+mat-paginator {
+    background: none;
+}
