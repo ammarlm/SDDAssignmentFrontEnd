@@ -20,8 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
     RouterModule
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
-  providers: [AuthService]
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   form: FormGroup = new FormGroup({
