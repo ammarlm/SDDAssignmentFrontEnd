@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>{{ (data.user ? 'USERS.EDIT' : 'USERS.CREATE') | translate }}</h2>
+<mat-dialog-content class="padding-top-10">
+    <form [formGroup]="form">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'USERS.USERNAME' | translate }}</mat-label>
+            <input matInput formControlName="username" required />
+            <mat-error *ngIf="form.get('username')?.hasError('required')">
+                {{ 'ERRORS.REQUIRED' | translate }}
+            </mat-error>
+        </mat-form-field>
+        @if(!data.user){
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'USERS.PASSWORD' | translate }}</mat-label>
+            <input matInput type="password" formControlName="password" [required]="!data.user" />
+            <mat-error *ngIf="form.get('password')?.hasError('required')">
+                {{ 'ERRORS.REQUIRED' | translate }}
+            </mat-error>
+        </mat-form-field>
+        }
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'USERS.ROLE' | translate }}</mat-label>
+            <mat-select formControlName="role" required>
+                <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('role')?.hasError('required')">
+                {{ 'ERRORS.REQUIRED' | translate }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-error *ngIf="msg != null" class="error">
+            {{ msg }}
+        </mat-error>
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onCancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="form.invalid">
+        {{ 'COMMON.SAVE' | translate }}
+    </button>
+</mat-dialog-actions>
