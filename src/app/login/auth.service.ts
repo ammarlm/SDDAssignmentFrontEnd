@@ -38,12 +38,12 @@ export class AuthService {
       return;
     }
     let userJson: {
-      email: string,
+      username: string,
       _token: string,
       role: string,
       _tokenExpiredDate: Date
     } = JSON.parse(userData);
-    let user = new LoginMoldel(userJson.email, userJson.role, userJson._token, userJson._tokenExpiredDate);
+    let user = new LoginMoldel(userJson.username, userJson.role, userJson._token, userJson._tokenExpiredDate);
     if (user.token) {
       this.loginUser.next(user);
       this.autoLogout(new Date(userJson._tokenExpiredDate).getTime() - new Date().getTime());
@@ -67,10 +67,16 @@ export class AuthService {
     }, expirationDuration)
   }
 
+  getUserRole() {
+    if (this.loginUser) {
+      return this.loginUser.value?.role;
+    }
+    return null;
+  }
   private handleAuth(res: AuthResponseData) {
     const expired = (res.expiredInMinute) * 60 * 1000;
     const expiredDate = new Date(new Date().getTime() + expired);
-    const user = new LoginMoldel(res.username, res.token, expiredDate);
+    const user = new LoginMoldel(res.username, res.role, res.token, expiredDate);
     this.loginUser.next(user);
     this.autoLogout(expired);
     localStorage.setItem('userData', JSON.stringify(user));
